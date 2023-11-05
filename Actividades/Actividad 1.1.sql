@@ -115,5 +115,3 @@ Go
 Select ID_Usuario, Apellidos, Nombres, FechaNacimiento, DatePart(YEAR, FechaNacimiento)
 as AnioNacimiento From Usuarios
 Order By FechaNacimiento Desc, Apellidos Asc
-
-
