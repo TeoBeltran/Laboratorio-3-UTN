@@ -1,61 +1,66 @@
-/*
-    -- Tarea:
-    -- Averiguar diferencias entre char, nchar, nvarchar, varchar
-
-    Create Database Clase1
-    go
-    Use Clase1
-    go
-    Create Table Areas(
-        ID tinyint primary key not null identity(1, 1), 
-        Nombre varchar(50) not null,
-        Presupuesto money not null check (Presupuesto > 0),
-        Mail varchar(100) not null unique
-    )
-    go
-    Create Table Empleados(
-        Legajo int primary key not null,
-        IDArea tinyint null foreign key references Areas(ID),
-        Apellidos varchar (100) not null,
-        Nombres varchar(100) not null,
-        FechaNacimiento date null check (FechaNacimiento <= getdate())
-    )
-
-    Tener en cuenta en Legajo que:
-        Texto
-        9 > 1111
-
-        Número
-        05656 --> 5656
-*/
-
--- Tarea:
--- Averiguar diferencias entre char, nchar, nvarchar, varchar
-
-Create Database Clase1
+Create Database AppRecetas
 go
-Use Clase1
+Use AppRecetas
 go
-Create Table Areas(
-    ID tinyint primary key not null identity(1, 1), 
+Create Table Ingredientes(
+    IDIngrediente int not null,
+    Nombre varchar(100) not null,
+    EsVegano bit not null default(0),
+    EsVegetariano bit not null default(0),
+    EsCeliaco bit not null default(0)
+)
+go
+Create Table Platos(
+    IDPlato int not null,
     Nombre varchar(50) not null,
-    Presupuesto money not null check (Presupuesto > 0),
-    Mail varchar(100) not null unique
+    Descripcion varchar(512) null,
+    TiempoPreparacion int null, -- minutos
+    Calorias int null,
+    Dificultad decimal(2, 1)
 )
 go
-Create Table Empleados(
-    Legajo int primary key not null,
-    IDArea tinyint null foreign key references Areas(ID),
-    Apellidos varchar (100) not null,
-    Nombres varchar(100) not null,
-    FechaNacimiento date null check (FechaNacimiento <= getdate())
+Create Table Recetas(
+    IDPlato int not null,
+    IDIngrediente int not null,
+    Cantidad decimal(6, 2) not null,
+    IDUnidadMedida tinyint not null
+)
+go
+Create Table UnidadesMedida(
+    IDUnidadMedida tinyint not null,
+    Nombre varchar(50) not null,
+    Primary Key(IDUnidadMedida)    
 )
 
-/**
-Tener en cuenta en Legajo que:
-    Texto
-    9 > 1111
-
-    Número
-    05656 --> 5656
-*/
+-- Restricciones
+Alter Table Ingredientes
+Add Constraint PK_Ingredientes Primary Key (IDIngrediente)
+go
+Alter Table Platos
+Add Constraint PK_Platos Primary Key (IDPlato)
+Go
+Alter Table Platos
+Add Constraint CHK_TiempoPreparacion Check (TiempoPreparacion > 0)
+go
+Alter Table Platos
+Add Constraint CHK_Calorias Check (Calorias > 0)
+go
+Alter Table Platos
+Add Constraint CHK_Dificultad Check (Dificultad >= 0 And Dificultad <= 5)
+go
+Alter Table Recetas
+Add Constraint PK_Recetas Primary Key (IDPlato, IDIngrediente)
+go
+Alter Table Recetas
+Add Constraint FK_Recetas_Platos Foreign Key (IDPlato) References Platos(IDPlato)
+go
+Alter Table Recetas
+Add Constraint FK_Recetas_Ingredientes Foreign Key (IDIngrediente) 
+References Ingredientes(IDIngrediente)
+go
+Alter Table Recetas
+Add Constraint FK_Recetas_UnidadMedida Foreign Key (IDUnidadMedida) 
+References UnidadesMedida(IDUnidadMedida)
+go
+Alter Table Recetas
+Add Constraint CHK_Cantidad Check (Cantidad > 0)
