@@ -18,22 +18,22 @@ Tambien, se debe verificar que la transferencia no tenga como Origen y Destino l
 Use MercadoLabo
 Go
 CREATE TABLE Movimientos (
-    ID_Movimiento bigint PRIMARY KEY IDENTITY(1, 1),
-    ID_Billetera bigint NOT NULL,
+    ID_Movimiento bigint NOT NULL PRIMARY KEY IDENTITY(1, 1),
+    ID_Billetera bigint NOT NULL foreign key references Billeteras(ID_Billetera),
     FechaMovimiento datetime NOT NULL,
     Importe money NOT NULL CHECK (Importe > 0),
-    TipoMovimiento char(1) CHECK (TipoMovimiento IN ('C', 'D')),
-    Estado varchar(20) NOT NULL,
-    FOREIGN KEY (ID_Billetera) REFERENCES Billeteras (ID_Billetera)
+    TipoMovimiento char NOT NULL CHECK (TipoMovimiento IN ('C', 'D')),
+    Estado bit NOT NULL default (1)
+    --FOREIGN KEY (ID_Billetera) REFERENCES Billeteras (ID_Billetera)
 );
 CREATE TABLE Transferencias (
-    ID_Transferencia bigint PRIMARY KEY IDENTITY(1, 1),
-    ID_BilleteraOrigen bigint NOT NULL,
-    ID_BilleteraDestino bigint NOT NULL,
+    ID_Transferencia bigint NOT NULL PRIMARY KEY IDENTITY(1, 1),
+    ID_BilleteraOrigen bigint NOT NULL foreign key references Billeteras(ID_Billetera),
+    ID_BilleteraDestino bigint NOT NULL foreign key references Billeteras(ID_Billetera),
     FechaTransferencia datetime NOT NULL,
     Importe money NOT NULL CHECK (Importe > 0),
-    Estado varchar(20) NOT NULL,
-    FOREIGN KEY (ID_BilleteraOrigen) REFERENCES Billeteras (ID_Billetera),
-    FOREIGN KEY (ID_BilleteraDestino) REFERENCES Billeteras (ID_Billetera),
+    Estado bit not null default(1)
+    --FOREIGN KEY (ID_BilleteraOrigen) REFERENCES Billeteras (ID_Billetera),
+    --FOREIGN KEY (ID_BilleteraDestino) REFERENCES Billeteras (ID_Billetera),
     CONSTRAINT CK_DistinctBilleteras CHECK (ID_BilleteraOrigen <> ID_BilleteraDestino)
 );
