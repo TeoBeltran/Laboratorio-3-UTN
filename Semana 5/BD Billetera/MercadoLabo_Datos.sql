@@ -1,31 +1,9 @@
--- Use Master
--- Go
--- Drop Database MercadoLabo
--- Go
-Create Database MercadoLabo
-go
-Use MercadoLabo
-Go
-Create Table Provincias(
-    ID_Provincia tinyint not null primary key identity (1, 1),
-    Provincia varchar(50) not null
-)
-Go
--- Provincias
 Insert into Provincias(Provincia) values ('Buenos Aires')
 Insert into Provincias(Provincia) values ('Catamarca')
 Insert into Provincias(Provincia) values ('Chaco')
 Insert into Provincias(Provincia) values ('Chubut')
 Insert into Provincias(Provincia) values ('Cordoba')
 
-Go
-Create Table Localidades(
-    ID_Localidad int not null primary key identity (1, 1),
-    ID_Provincia tinyint not null foreign key references Provincias(ID_Provincia),
-    Localidad varchar(200) not null
-)
-Go
--- Localidades
 Insert into Localidades(ID_Provincia, Localidad) values (1, 'La Plata')
 Insert into Localidades(ID_Provincia, Localidad) values (1, 'Mar del Plata')
 Insert into Localidades(ID_Provincia, Localidad) values (1, 'Bahia Blanca')
@@ -42,12 +20,6 @@ Insert into Localidades(ID_Provincia, Localidad) values (5, 'Rio Cuarto')
 Insert into Localidades(ID_Provincia, Localidad) values (5, 'Villa Maria')
 Insert into Localidades(ID_Provincia, Localidad) values (5, 'San Francisco')
 
-Go
-Create Table Bancos(
-    ID_Banco smallint not null primary key identity (1, 1),
-    Nombre varchar(100) not null
-)
-Go
 Insert Into Bancos(Nombre) values ('Banco de la Nacion Argentina')
 Insert Into Bancos(Nombre) values ('Banco Santander Rio')
 Insert Into Bancos(Nombre) values ('Banco Galicia')
@@ -64,12 +36,6 @@ Insert Into Bancos(Nombre) values ('Banco Hipotecario')
 Insert Into Bancos(Nombre) values ('Banco Columbia')
 Insert Into Bancos(Nombre) values ('Banco ICBC')
 
-Go
-Create Table NivelesSituacionCrediticia(
-    ID_NivelSituacionCrediticia tinyint not null primary key identity (1, 1),
-    SituacionCrediticia varchar(50) not null
-)
-Go
 Insert Into NivelesSituacionCrediticia(SituacionCrediticia) values ('Excelente')
 Insert Into NivelesSituacionCrediticia(SituacionCrediticia) values ('Muy Buena')
 Insert Into NivelesSituacionCrediticia(SituacionCrediticia) values ('Buena')
@@ -77,12 +43,7 @@ Insert Into NivelesSituacionCrediticia(SituacionCrediticia) values ('Regular')
 Insert Into NivelesSituacionCrediticia(SituacionCrediticia) values ('Mala')
 Insert Into NivelesSituacionCrediticia(SituacionCrediticia) values ('Muy Mala')
 Insert Into NivelesSituacionCrediticia(SituacionCrediticia) values ('No confiable')
-Go
-Create Table MarcasTarjeta(
-    ID_MarcaTarjeta tinyint not null primary key identity (1, 1),
-    Marca varchar(100) not null
-)
-Go
+
 Insert Into MarcasTarjeta(Marca) values ('Visa')
 Insert Into MarcasTarjeta(Marca) values ('Mastercard')
 Insert Into MarcasTarjeta(Marca) values ('American Express')
@@ -95,53 +56,30 @@ Insert Into MarcasTarjeta(Marca) values ('Zelev')
 Insert Into MarcasTarjeta(Marca) values ('Laramerican Express')
 Insert Into MarcasTarjeta(Marca) values ('KlosterCard')
 
-Go
-Create Table Usuarios(
-    ID_Usuario bigint not null primary key identity (1, 1),
-    Apellidos varchar(200) not null,
-    Nombres varchar(200) not null,
-    FechaNacimiento date not null check (FechaNacimiento <= getdate()),
-    Genero char null,
-    ID_SituacionCrediticia tinyint foreign key references NivelesSituacionCrediticia(ID_NivelSituacionCrediticia),
-    Telefono varchar(20) null,
-    Celular varchar(20) null,
-    Mail varchar(250) not null unique,
-    Domicilio varchar(500) not null,
-    ID_Localidad int not null foreign key references Localidades(ID_Localidad)
-)
-Go
 SET DATEFORMAT 'YMD'
-INSERT INTO Usuarios (Apellidos, Nombres, Genero, FechaNacimiento, Domicilio, ID_Localidad, ID_SituacionCrediticia, Telefono, Celular, Mail)
+INSERT INTO Usuarios (DNI, Apellidos, Nombres, Genero, FechaNacimiento, Domicilio, ID_Localidad, ID_NivelesSituacionCrediticia, Telefono, Celular, Mail)
 VALUES
-    ('Garcia', 'Luis', 'F', '1987-08-25', 'Calle 123', 1, 3, '011-1234567', '155-987654', 'luis.garcia@example.com'),
-    ('Martinez', 'Ana', 'M', '1995-04-12', 'Av. Principal 456', 2, 4, NULL, NULL, 'ana.martinez@example.com'),
-    ('Fernandez', 'Diego', 'X', '2001-11-30', 'Ruta 7 KM 89', 3, 2, NULL, '155-789012', 'diego.fernandez@example.com'),
-    ('Lopez', 'Maria', 'F', '1990-06-18', 'Calle del Sol 789', 4, 5, '0341-4567890', '154-567890', 'maria.lopez@example.com'),
-    ('Rodriguez', 'Jorge', 'M', '1982-03-02', 'Calle 456', 1, 1, '011-5555555', NULL, 'jorge.rodriguez@example.com'),
-    ('Perez', 'Laura', 'X', '1988-09-07', 'Av. Libertador 789', 2, 3, NULL, '155-123456', 'laura.perez@example.com'),
-    ('Gomez', 'Juan', 'X', '2000-12-15', 'Ruta 9 KM 10', 3, 4, '0221-1111111', NULL, 'juan.gomez@example.com'),
-    ('Hernandez', 'Carolina', 'F', '1993-07-22', 'Calle 789', 4, 2, NULL, '154-999999', 'carolina.hernandez@yahoo.com'),
-    ('Diaz', 'Andres', 'M', '1984-01-08', 'Calle 123', 1, 5, '011-2222222', NULL, 'andres.diaz@utn.edu.ar'),
-    ('Torres', 'Sofia', 'F', '1997-06-28', 'Av. Principal 456', 2, 1, NULL, '155-444444', 'sofia.torres@gmail.com'),
-    ('Ramirez', 'Daniel', 'M', '2002-03-17', 'Ruta 7 KM 89', 3, 3, '0221-3333333', NULL, 'daniel.ramirez@google.com'),
-    ('Herrera', 'Valentina', 'F', '1989-10-11', 'Calle del Sol 789', 4, 4, NULL, '154-777777', 'valentina.herrera@example.com'),
-    ('Fernandez', 'Gustavo', 'M', '1986-12-03', 'Calle 456', 1, 2, '011-8888888', '155-666666', 'gustavo.fernandez@example.com'),
-    ('Chavez', 'Camila', 'F', '1994-05-09', 'Av. Libertador 789', 2, 5, NULL, '154-222222', 'camila.chavez@example.com'),
-    ('Sanchez', 'Mariano', 'M', '2003-09-20', 'Ruta 9 KM 10', 3, 1, '0221-9999999', NULL, 'mariano.sanchez@example.com'),
-    ('Gonzalez', 'Paula', 'F', '1991-08-16', 'Calle 789', 4, 3, NULL, '155-555555', 'paula.gonzalez@ibm.com'),
-    ('Lopez', 'Alejandro', 'M', '1983-07-14', 'Calle 123', 1, 4, '011-7777777', NULL, 'alejandro.lopez@example.com'),
-    ('Martinez', 'Lucia', 'F', '1998-04-06', 'Av. Principal 456', 2, 2, NULL, '154-111111', 'lucia.martinez@example.com'),
-    ('Diaz', 'Patricio', 'X', '2000-11-25', 'Ruta 7 KM 89', 3, 5, NULL, NULL, 'patricio.diaz@angel.org'),
-    ('Gomez', 'Bianca', 'F', '1992-06-30', 'Calle del Sol 789', 4, 1, NULL, '155-333333', 'bianca.gomez@example.com');
-Go
-Create Table Billeteras(
-    ID_Billetera bigint not null primary key identity (10001, 1),
-    ID_Usuario bigint not null unique foreign key references Usuarios(ID_USuario),
-    Alias varchar(30) not null unique,
-    FechaCreacion date not null,
-    Saldo money not null default(0)
-)
-Go
+    (1000, 'Garcia', 'Luis', 'F', '1987-08-25', 'Calle 123', 1, 3, '011-1234567', '155-987654', 'luis.garcia@example.com'),
+    (1137, 'Martinez', 'Ana', 'M', '1995-04-12', 'Av. Principal 456', 2, 4, NULL, NULL, 'ana.martinez@example.com'),
+    (1274, 'Fernandez', 'Diego', 'X', '2001-11-30', 'Ruta 7 KM 89', 3, 2, NULL, '155-789012', 'diego.fernandez@example.com'),
+    (1411, 'Lopez', 'Maria', 'F', '1990-06-18', 'Calle del Sol 789', 4, 5, '0341-4567890', '154-567890', 'maria.lopez@example.com'),
+    (1548, 'Rodriguez', 'Jorge', 'M', '1982-03-02', 'Calle 456', 1, 1, '011-5555555', NULL, 'jorge.rodriguez@example.com'),
+    (1685, 'Perez', 'Laura', 'X', '1988-09-07', 'Av. Libertador 789', 2, 3, NULL, '155-123456', 'laura.perez@example.com'),
+    (1822, 'Gomez', 'Juan', 'X', '2000-12-15', 'Ruta 9 KM 10', 3, 4, '0221-1111111', NULL, 'juan.gomez@example.com'),
+    (1959, 'Hernandez', 'Carolina', 'F', '1993-07-22', 'Calle 789', 4, 2, NULL, '154-999999', 'carolina.hernandez@yahoo.com'),
+    (2096, 'Diaz', 'Andres', 'M', '1984-01-08', 'Calle 123', 1, 5, '011-2222222', NULL, 'andres.diaz@utn.edu.ar'),
+    (2233, 'Torres', 'Sofia', 'F', '1997-06-28', 'Av. Principal 456', 2, 1, NULL, '155-444444', 'sofia.torres@gmail.com'),
+    (2369, 'Ramirez', 'Daniel', 'M', '2002-03-17', 'Ruta 7 KM 89', 3, 3, '0221-3333333', NULL, 'daniel.ramirez@google.com'),
+    (2506, 'Herrera', 'Valentina', 'F', '1989-10-11', 'Calle del Sol 789', 4, 4, NULL, '154-777777', 'valentina.herrera@example.com'),
+    (2643, 'Fernandez', 'Gustavo', 'M', '1986-12-03', 'Calle 456', 1, 2, '011-8888888', '155-666666', 'gustavo.fernandez@example.com'),
+    (2779, 'Chavez', 'Camila', 'F', '1994-05-09', 'Av. Libertador 789', 2, 5, NULL, '154-222222', 'camila.chavez@example.com'),
+    (2916, 'Sanchez', 'Mariano', 'M', '2003-09-20', 'Ruta 9 KM 10', 3, 1, '0221-9999999', NULL, 'mariano.sanchez@example.com'),
+    (3053, 'Gonzalez', 'Paula', 'F', '1991-08-16', 'Calle 789', 4, 3, NULL, '155-555555', 'paula.gonzalez@ibm.com'),
+    (3189, 'Lopez', 'Alejandro', 'M', '1983-07-14', 'Calle 123', 1, 4, '011-7777777', NULL, 'alejandro.lopez@example.com'),
+    (3326, 'Martinez', 'Lucia', 'F', '1998-04-06', 'Av. Principal 456', 2, 2, NULL, '154-111111', 'lucia.martinez@example.com'),
+    (3463, 'Diaz', 'Patricio', 'X', '2000-11-25', 'Ruta 7 KM 89', 3, 5, NULL, NULL, 'patricio.diaz@angel.org'),
+    (3599, 'Gomez', 'Bianca', 'F', '1992-06-30', 'Calle del Sol 789', 4, 1, NULL, '155-333333', 'bianca.gomez@example.com');
+
 Insert Into Billeteras(Alias, ID_Usuario, FechaCreacion, Saldo) values ('ABEJA.CAFE.TENIS', 1, '2020-01-01', 1000)
 Insert Into Billeteras(Alias, ID_Usuario, FechaCreacion, Saldo) values ('GALGO.AGUA.ROBOT', 2, '2020-01-15', 500)
 Insert Into Billeteras(Alias, ID_Usuario, FechaCreacion, Saldo) values ('CABALLO.CASA.TELEFONO', 3, '2020-02-01', 2000)
@@ -162,19 +100,6 @@ Insert Into Billeteras(Alias, ID_Usuario, FechaCreacion, Saldo) values ('MULETA.
 Insert Into Billeteras(Alias, ID_Usuario, FechaCreacion, Saldo) values ('JUGO.KIWI.FRENO', 18, '2022-01-22', 34000)
 Insert Into Billeteras(Alias, ID_Usuario, FechaCreacion, Saldo) values ('TALCO.JABON.AGUA', 19, '2020-07-08', 55000)
 Insert Into Billeteras(Alias, ID_Usuario, FechaCreacion, Saldo) values ('GATO.PELO.DIENTE', 20, '2021-01-10', 747000)
-
-Go
-Create Table Tarjetas(
-    ID_Tarjeta bigint not null primary key identity (1, 1),
-    ID_Billetera bigint not null foreign key references Billeteras(ID_Billetera),
-    ID_MarcaTarjeta tinyint not null foreign key references MarcasTarjeta(ID_MarcaTarjeta),
-    ID_Banco smallint not null foreign key references Bancos(ID_Banco),
-    Numero varchar(16) not null unique check(LEN(RTrim(LTrim(Numero))) = 16),
-    FechaEmision date not null,
-    FechaVencimiento date not null,
-    CodigoSeguridad varchar(4) not null,
-    check(FechaEmision < FechaVencimiento)
-)
 
 Insert into Tarjetas (ID_Billetera, ID_MarcaTarjeta, ID_Banco, Numero, FechaEmision, FechaVencimiento, CodigoSeguridad) values (10001, 1, 1, '1234567890123456', '2020-01-01', '2022-12-31', '123')
 Insert into Tarjetas (ID_Billetera, ID_MarcaTarjeta, ID_Banco, Numero, FechaEmision, FechaVencimiento, CodigoSeguridad) values (10002, 3, 2, '2345678901234567', '2020-01-15', '2024-11-30', '234')
