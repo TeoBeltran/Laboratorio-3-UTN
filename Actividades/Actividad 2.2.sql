@@ -16,5 +16,44 @@ Actividades
 9 Listar nombres y apellidos del usuario que tenga la tarjeta que mas tiempo falta que llegue a su vencimiento.
 10 Listar las distintas marcas de tarjeta, sin repetir, de los usuarios.
 11 Listar todos los datos de los usuarios que tengan una situacion crediticia diferente de 'Excelente', 'Regular' y 'No confiable'.
-
 */
+
+Use MercadoLabo
+Go
+Select T.Numero, T.FechaEmision, B.Nombre As Banco, M.Marca As Marca, DATEDIFF(DAY, GETDATE(), T.FechaVencimiento) AS DiasRestantesVencimiento From Tarjetas T
+Inner Join Bancos B On T.ID_Banco = B.ID_Banco Inner Join MarcasTarjeta M On T.ID_MarcaTarjeta = M.ID_MarcaTarjeta;
+Go
+Select U.Apellidos, U.Nombres, DATEDIFF(YEAR, U.FechaNacimiento, GETDATE()) AS Edad, B.Alias As Alias, DATEDIFF(DAY, B.FechaCreacion, GETDATE()) AS AntiguedadBilleteraDias, B.Saldo AS SaldoBilletera
+From Usuarios U Inner Join Billeteras B On U.ID_Usuario = B.ID_Usuario;
+Go
+Select U.Apellidos, U.Nombres,
+    CASE
+        WHEN B.Saldo > 1000000 THEN 'Gold'
+        WHEN B.Saldo > 500000 THEN 'Silver'
+        WHEN B.Saldo >= 50000 THEN 'Bronze'
+        ELSE 'Copper'
+    END AS CategoriaSaldo
+From Usuarios U Inner Join Billeteras B On U.ID_Usuario = B.ID_Usuario;
+Go
+Select U.Apellidos, U.Nombres, U.Domicilio, L.Localidad As Localidad, P.Provincia As Provincia From Usuarios U
+Inner Join Localidades L On U.ID_Localidad = L.ID_Localidad Inner Join Provincias P On L.ID_Provincia = P.ID_Provincia;
+Go
+Select U.Apellidos, U.Nombres From Usuarios U Inner Join NivelesSituacionCrediticia NSC On U.ID_NivelesSituacionCrediticia = NSC.ID_NivelesSituacionCrediticia
+Inner Join Localidades L On U.ID_Localidad = L.ID_Localidad Inner Join Provincias P On L.ID_Provincia = P.ID_Provincia Where NSC.SituacionCrediticia = 'Excelente' and P.Provincia = 'Buenos Aires';
+Go
+Select U.Nombres, U.Apellidos, U.Celular From Usuarios U
+Inner Join Localidades L On U.ID_Localidad = L.ID_Localidad Inner Join Provincias P On L.ID_Provincia = P.ID_Provincia Where P.Provincia = 'Cordoba';
+Go
+Select U.Nombres, U.Apellidos From Usuarios U Left Join Billeteras B On U.ID_Usuario = B.ID_Usuario Left Join Tarjetas T On B.ID_Billetera = T.ID_Billetera Where T.ID_Tarjeta is null;
+Go
+Select U.Nombres, U.Apellidos, B.Alias As Alias, M.Marca As Marca, Bn.Nombre As Banco From Usuarios U
+Left Join Billeteras B On U.ID_Usuario = B.ID_Usuario
+Left Join Tarjetas T On B.ID_Billetera = T.ID_Billetera Left Join MarcasTarjeta M On T.ID_MarcaTarjeta = M.ID_MarcaTarjeta Left Join Bancos Bn On T.ID_Banco = Bn.ID_Banco;
+Go
+Select U.Nombres, U.Apellidos From Usuarios U Inner Join Billeteras B On U.ID_Usuario = B.ID_Usuario Inner Join Tarjetas T On B.ID_Billetera = T.ID_Billetera
+Where T.FechaVencimiento = (Select Top 1 FechaVencimiento From Tarjetas Order By FechaVencimiento Desc);
+Go
+Select Distinct MT.Marca From Usuarios U Join Billeteras B On U.ID_Usuario = B.ID_Usuario Join Tarjetas T On B.ID_Billetera = T.ID_Billetera Join MarcasTarjeta MT On T.ID_MarcaTarjeta = MT.ID_MarcaTarjeta;
+Go
+Select * From Usuarios U Inner Join NivelesSituacionCrediticia NSC On U.ID_NivelesSituacionCrediticia = NSC.ID_NivelesSituacionCrediticia 
+Where SituacionCrediticia = 'Excelente' Or SituacionCrediticia = 'Regular' Or SituacionCrediticia = 'No Confiable';
