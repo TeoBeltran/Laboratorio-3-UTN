@@ -13,9 +13,9 @@ Parte 4 - Triggers
 - Registre una tarjeta a dicho usuario
 
 3) Realizar un trigger que al registrar una nueva tarjeta:
-- Le realice baja lógica a la última tarjeta del cliente.
-- Le asigne a la nueva tarjeta el saldo de la última tarjeta del cliente.
-- Registre la nueva tarjeta para el cliente (con el saldo de la vieja tarjeta, la fecha de alta de la tarjeta deberá ser la del sistema).
+- Le realice baja logica a la ultima tarjeta del cliente.
+- Le asigne a la nueva tarjeta el saldo de la ultima tarjeta del cliente.
+- Registre la nueva tarjeta para el cliente (con el saldo de la vieja tarjeta, la fecha de alta de la tarjeta debera ser la del sistema).
 
 4) Realizar un trigger que al eliminar un cliente:
 - Elimine el cliente
