@@ -59,7 +59,6 @@ Begin
 End
 Go
 Exec sp_Agregar_Tarjeta '101099999';
-Select * From Usuario
 Go
 
 
